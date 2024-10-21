@@ -1,0 +1,21 @@
+
+/* Filtable styles */
+tr.hidden {
+	display: none;
+}
+/* tr:nth-child(odd) > td {
+	background-color: #ffffff;
+}
+tr:nth-child(even) > td {
+	background-color: #f9f9f7;
+}
+tr.odd > td {
+	background-color: #ffffff;
+}
+tr.even > td {
+	background-color: #f9f9f7;
+} */
+
+.bg-reportss {
+    background: #1abc9c!important;
+}
