@@ -5,11 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
-use App\Campaigns;
-use App\JobFile;
 use App\User;
-use App\Notifications;
-use App\Uploads;
 
 class HomeController extends Controller
 {

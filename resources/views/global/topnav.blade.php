@@ -30,7 +30,7 @@
             }
             @endphp
             <li class="float-left">
-                <a href="{{ $home }}" class="logo">
+                <a href="{{ $home }}" class="logo" style="font-weight: 700;font-size: 20px;">
                     Helpdesk
                 </a>
             </li>

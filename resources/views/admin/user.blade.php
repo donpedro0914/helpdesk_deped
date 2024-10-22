@@ -8,7 +8,7 @@
                 <div class="container-fluid">
                     <div class="page-title-box">
                         <ol class="breadcrumb float-right">
-                            <li class="breadcrumb-item"><a href="javascript:void(0);">Infinity</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">HelpDesk</a></li>
                             <li class="breadcrumb-item active">Users</li>
                         </ol>
 	                    <h4 class="page-title">Users</h4>
@@ -18,7 +18,7 @@
                             <div class="card border border-primary">
                                 <div class="card-body text-primary">
                                     <h4 class="header-title float-left">No. of Users Online</h4>
-                                    <h1 class="float-right">0</h1>
+                                    <h1 class="float-right">{{ $usersActiveCount }}</h1>
                                 </div>
                             </div>
                         </div>
@@ -26,7 +26,7 @@
                             <div class="card border border-danger">
                                 <div class="card-body text-danger">
                                     <h4 class="header-title float-left">No. of Suspended Users</h4>
-                                    <h1 class="float-right">0</h1>
+                                    <h1 class="float-right">{{ $usersInactiveCount }}</h1>
                                 </div>
                             </div>
                         </div>
@@ -52,22 +52,18 @@
                                             <tbody>
                                                 @foreach($users as $user)
                                                 <tr class="text-center">
-                                                    @if(($user->position == 'Installer Operative') || ($user->position == 'Installer Manager'))
-                                                    <td>{{ $user->name }} - {{ $user->installer_name }}</td>
-                                                    @else
                                                     <td>{{ $user->name }}</td>
-                                                    @endif
-                                                    <td>{{ $user->position }}</td>
+                                                    <td>{{ $user->role }}</td>
                                                     <td>
-                                                        @if($user->status = '1')
+                                                        @if($user->status == '1')
                                                             <span class="badge badge-success">Active</span>
                                                         @else
                                                             <span class="badge badge-danger">Suspended</span>
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <a href="{{ route('admin.user.edit', ['id'=>$user->user_id]) }}" class="btn btn-xs btn-default btn-edit"><i class="mdi mdi-pencil"></i></a>
-                                                        <a data-module="user" id="{{ $user->user_id }}" data-name="{{ $user->name }}" class="btn btn-xs btn-default btn-delete"><i class="text-danger mdi mdi-close-circle"></i></a>
+                                                        <a href="{{ route('admin.user.edit', ['id'=>$user->id]) }}" class="btn btn-xs btn-default btn-edit"><i class="mdi mdi-pencil"></i></a>
+                                                        <a data-module="user" id="{{ $user->id }}" data-name="{{ $user->name }}" class="btn btn-xs btn-default btn-delete"><i class="text-danger mdi mdi-close-circle"></i></a>
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -86,62 +82,10 @@
 @push('scripts')
 <script type="text/javascript">
 
-
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            
-            reader.onload = function (e) {
-                $('#storeLogoPreview').attr('src', e.target.result);
-            }
-            
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
     $(document).ready(function() {
-
-        $('#storeLogo').change(function() {
-            readURL(this);
-        });
 
         $('.table').DataTable({
             keys: true
-        });
-
-        $('#employeePosition').on('change', function () {
-            var position = $('#employeePosition').val();
-            if (position == 'Installer Manager') {
-                $('#installer_operative').show();
-                $('#installer_operative_io').hide();
-                $('#installer_surveyor_io').hide();
-                $('#installer_operatives').attr('name', 'installer_operatives[]');
-                $('#installer_name').show();
-                $('#installer_name_fld').attr('name', 'installer_name');
-            } else if(position == 'Installer Operative') {
-                $('#installer_name').show();
-                $('#installer_name_fld').attr('name', 'installer_name');
-                $('#installer_operative').hide();
-                $('#installer_operatives').removeAttr('name');
-            } else if(position == 'Installer Admin') {
-                $('#installer_operative_io').show();
-                $('#installer_surveyor_io').show();
-                $('#installer_operative').hide();
-                $('#installer_operatives_io').attr('name', 'installer_operatives_io[]');
-                $('#installer_name').show();
-                $('#installer_name_fld').attr('name', 'installer_name');
-            } else if (position == 'Surveyor') {
-                $('#installer_operative_io').hide();
-                $('#installer_surveyor_io').hide();
-                $('#installer_operative').hide();
-                $('#installer_name').show();
-                $('#installer_name_fld').attr('name', 'installer_name');
-            } else {
-                $('#installer_operative_io').hide();
-                $('#installer_surveyor_io').hide();
-                $('#installer_operative').hide();
-                $('#installer_name').hide();
-            }
         });
 
         var success = "{!! session('success') !!}";
