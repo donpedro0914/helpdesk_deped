@@ -18,7 +18,7 @@
                             <div class="card border border-primary">
                                 <div class="card-body text-primary">
                                     <h4 class="header-title float-left">No. of Active Tickets</h4>
-                                    <h1 class="float-right">0</h1>
+                                    <h1 class="float-right">{{ $openTicketCount }}</h1>
                                 </div>
                             </div>
                         </div>
@@ -58,8 +58,8 @@
                                                     <td>{{ $t->subject }}</td>
                                                     <td>{{ $t->type }}</td>
                                                     <td>{{ $t->urgency }}</td>
-                                                    <td>{{ $t->name }}</td>
-                                                    <td>{{ $t->agent }}</td>
+                                                    <td>{{ $t->raised_by_name }}</td>
+                                                    <td>{{ $t->agent_name }}</td>
                                                     <td>{{ $t->status }}</td>
                                                     <td>{{ $t->created_at }}</td>
                                                     <td>

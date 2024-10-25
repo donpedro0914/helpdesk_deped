@@ -9,6 +9,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Facades\File;
+use Mail;
 
 class TicketsController extends Controller
 {
@@ -20,9 +21,9 @@ class TicketsController extends Controller
     
     public function index()
     {
-        // $tickets = Tickets::all();
-        $tickets = Tickets::select('tickets.*', 'users.name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->get();
-        return view('tickets', compact('tickets'));
+        $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->get();
+        $openTicketCount = Tickets::where('status', 'Open')->count();
+        return view('tickets', compact('tickets'), ['openTicketCount' => $openTicketCount]);
     }
 
     public function create()
@@ -46,22 +47,33 @@ class TicketsController extends Controller
         $ticket->save();
 
         if($request->hasFile('upload')) {
-            $attachmentsPath = public_path('storage/attachments');
+            $attachmentsPath = public_path().'/attachments/'.$ticket->slug.'/';
             if (!File::exists($attachmentsPath)) {
                 File::makeDirectory($attachmentsPath, 0755, true);  // Permissions and recursive set to true
             }
-
-            $filePath = $request->file('upload')->store('attachments', 'public');
             $file = $request->file('upload');
-            $filename = time().$file->getClientOriginalName();
+            $filename = $file->getClientOriginalName();
             $uploads = new Uploads;
             $uploads->slug = $ticket->slug;
             $uploads->filename = $filename;
-            $uploads->path = $filePath;
-            $file->move($filePath, $filename);
+            $uploads->path = $attachmentsPath;
+            $file->move($attachmentsPath, $filename);
             $uploads->uploaded_by = Auth::user()->id;
             $uploads->save();
         }
+
+        $data = array(
+            'slug' => $ticket->slug
+        );
+
+        $mail = Mail::send('email.leadnote', $data, function ($message) {
+
+            $subj = 'New Ticket has been generated';
+            $sendto = 'peter.ordonez0914@gmail.com';
+
+            $message->to($sendto, $subj)->subject($subj);
+            $message->from('no-reply@helpdesk.com', 'Admin');
+        });
 
         return ($ticket) ? redirect('tickets')->with('success', 'Ticket Created Successfully') :
                             redirect('tickets')->with('error', 'Something went wrong');
@@ -71,8 +83,75 @@ class TicketsController extends Controller
     {
         $ticket = Tickets::where('slug', $slug)->first();
         $issues = Issues::where('status', '1')->pluck('type', 'id');
-        $agents = User::where('role', 'HelpDesk Agent')->where('status', '1')->pluck('name', 'id');
-        return view('view-ticket', ['ticket' => $ticket], compact('issues', 'agents'));
+        $agents = User::where('role', 'HelpDesk Agent')->where('status', '1')->pluck('name', 'id')->prepend('-- Select Agent --', '');
+        $uploads = Uploads::select('uploads.*', 'users.name')->leftJoin('users', 'uploads.uploaded_by', '=', 'users.id')->where('uploads.slug', $slug)->get();
+        return view('view-ticket', ['ticket' => $ticket], compact('issues', 'agents', 'uploads'));
+    }
+
+    public function download($filename, $slug)
+    {
+        $file = Uploads::where('filename', $filename)->where('slug', $slug)->first();
+        $path = $file->path . $filename;
+        $path = str_replace('\\', '/', $path);
+        // dd($path);
+        \Log::info($path);
+
+        return response()->download($path);
+    }
+
+    public function update($slug, Request $request)
+    {
+        $ticket = Tickets::where('slug', $slug)->first();
+        $user = Auth::user()->id;
+        $name = Auth::user()->name;
+
+        if (!empty($request->input('note'))) {
+
+            $note = str_replace('{', '|', $request->input('note'));
+            $note = str_replace('}', '|', $request->input('note'));
+            $note = str_replace('[', '|', $request->input('note'));
+            $note = str_replace(']', '|', $request->input('note'));
+            $note = "{[" . $name . "][" . $request->input('note') . "][" . date('Y-m-d') . " " . date('H:i:s') . "]}" . $ticket->notes;
+
+        } else {
+            $note = $ticket->notes;
+        }
+
+        $ticket->notes = $note;
+        $ticket->status = $request->status;
+        $ticket->issue_type = $request->issue_type;
+        $ticket->urgency = $request->urgency;
+        $ticket->save();
+
+        return ($ticket) ? back()->with('success', 'Ticket has been updated') :
+                            back()->with('error', 'Something went wrong');
+    }
+
+    public function deletecomment($slug, Request $request)
+    {
+        $ticket = Tickets::where('slug', $slug)->first();
+        $delete = request('note');
+
+        $comments = str_replace("\n", "&space;", $ticket->notes);
+        $comments = str_replace(array("\r", "\n"), '', $comments);
+        $delete = str_replace("<br>", "&space;", $delete);
+        $delete = str_replace(array("\r", "\n"), '', $delete);
+        $newcomment = str_replace($delete, "", $comments);
+        $newcomment = str_replace('&space;', "\n", $newcomment);
+
+        $ticket->notes = $newcomment;
+        $ticket->save();
+
+        return response()->json($ticket);
+    }
+
+    public function assign_agent($slug, Request $request)
+    {
+        $ticket = Tickets::where('slug', $slug)->first();
+        $ticket->agent = request('agent');
+        $ticket->save();
+
+        return response()->json($ticket);
     }
 
 }

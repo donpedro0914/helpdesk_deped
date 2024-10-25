@@ -116,5 +116,68 @@ $(document).ready(function() {
 			}
 		});
 	});
+
+	$('.notes.well').on('click', '.deleteleadcomment', function (e) {
+	
+		e.preventDefault();
+		var comment = $('.deleteleadcomment2').attr('data-content');
+		var slug = $('.deleteleadcomment2').attr('data-slug');
+
+		swal({
+			title: 'Are you sure?',
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes!'
+		}).then((result) => {
+			if(result.value) {
+
+				$.ajax({
+					type: "POST",
+					url: baseurl + "deletecomment/" + slug,
+					data: {'note':comment},
+					success: function(data) {
+						swal('Deleted!', 'note has been deleted', 'success');
+						setTimeout(function(){
+							location.reload()
+						},500);						
+					}
+				});
+			}
+		});
+	});
+
+	$('.update_agent_btn').on('click', function(e) {
+	
+		e.preventDefault();
+		var agent = $('.agent_list').val();
+		var agentName = $('.agent_list').find('option:selected').text();
+		var slug = $(this).attr('data-slug');
+
+		swal({
+			title: 'Are you sure you want to assign this ticket to ' + agentName +'?',
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes!'
+		}).then((result) => {
+			if(result.value) {
+
+				$.ajax({
+					type: "POST",
+					url: baseurl + "assign_agent/" + slug,
+					data: {'agent':agent},
+					success: function(data) {
+						swal('Updated!', 'agent has been assigned', 'success');
+						setTimeout(function(){
+							location.reload()
+						},500);						
+					}
+				});
+			}
+		});
+	});
 	
 });

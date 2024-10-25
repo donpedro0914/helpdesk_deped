@@ -17,10 +17,21 @@
                     <div class="row">
                         <div class="col-xl-8">
                             <div class="card-box">
-                                <form action="{{ route('store.ticket') }}" method="post" enctype="multipart/form-data">
+                                <form action="{{ route('update.ticket', ['slug' => $ticket->slug]) }}" method="post" enctype="multipart/form-data">
                                     @csrf
                                     <div class="form-row">
                                         <div class="col-md-12">
+                                            <div class="form-group col-md-12 col-xs-12">
+                                                <label>Status</label>
+                                                @php
+                                                    $status = array(
+                                                        'Open' => 'Open',
+                                                        'In-Progress' => 'In-Progress',
+                                                        'Closed' => 'Closed'
+                                                    );
+                                                @endphp
+                                                {{ Form::select('status', $status, $ticket->status, ['class' => 'form-control']) }}
+                                            </div>
                                             <div class="form-group col-md-12 col-xs-12">
                                                 <label>Subject</label>
                                                 <input type="text" class="form-control" name="subject" value="{{ $ticket->subject }}" readonly />
@@ -44,17 +55,14 @@
                                                 <label>Details</label>
                                                 <p style="height: 150px;border:1px solid #ccc;padding:5px;border-radius:5px;">{{ $ticket->details }}</p>
                                             </div>
-                                            <div class="form-group col-md-12 col-xs-12">
-                                                <label>Attachments</label>
-                                                <input type="file" class="form-control" name="upload" />
-                                            </div>
+                                            @include('global.notes')
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-12 col-xs-12">
                                             <div class="clearfix text-right mt-3">
                                                 <button type="submit" class="btn btn-success">
-                                                    Add Ticket
+                                                    Update Ticket
                                                 </button>
                                             </div>
                                         </div>
@@ -65,8 +73,20 @@
                         <div class="col-xl-4">
                             <div class="card-box">
                                 <div class="form-row">
-                                    <label>HelpDesk Agent</label>
-                                    {{ Form::select('agent', $agents, $ticket->agent, ['class' => 'form-control']) }}
+                                    <div class="form-group col-md-12">
+                                        <label>HelpDesk Agent</label>
+                                        {{ Form::select('agent', $agents, $ticket->agent, ['class' => 'form-control agent_list']) }}
+                                        <button class="btn btn-primary float-right update_agent_btn" data-slug="{{ $ticket->slug }}">Update Agent</button>
+                                    </div>
+                                    <hr />
+                                    <div class="form-group col-md-12">
+                                        <label>Attachments</label>
+                                        <ul class="media_upload">
+                                            @foreach($uploads as $u)
+                                            <li class="media_item">{{ $u->filename }} <small>(uploaded by {{ $u->name }})</small><a href="{{ route('download', ['filename' => $u->filename, 'slug' => $u->slug]) }}" target="_blank"><i class="mdi mdi-download"></i></a></li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>

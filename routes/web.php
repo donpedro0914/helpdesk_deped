@@ -57,3 +57,7 @@ Route::get('/tickets', 'TicketsController@index')->name('tickets');
 Route::get('/ticket/create', 'TicketsController@create')->name('create.ticket');
 Route::post('/ticket/store', 'TicketsController@store')->name('store.ticket');
 Route::get('ticket/{slug}', 'TicketsController@view')->name('view.ticket');
+Route::get('/download/{filename}/{slug}', 'TicketsController@download')->name('download');
+Route::post('/ticket/update/{slug}', 'TicketsController@update')->name('update.ticket');
+Route::post('deletecomment/{slug}', 'TicketsController@deletecomment');
+Route::post('assign_agent/{slug}', 'TicketsController@assign_agent');
