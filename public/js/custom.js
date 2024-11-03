@@ -89,9 +89,9 @@ $(document).ready(function() {
 				var datatable = "table";
 
 				if(module == 'position') {
-					var url = document.location.origin + "/admin/position/delete/" + id;
+					var url = document.location.origin + "/position/delete/" + id;
 				} else if(module == 'user') {
-                    var url = document.location.origin + "/admin/user/delete/" + id;
+                    var url = document.location.origin + "/user/delete/" + id;
                 }
 
 				var data = "id="+id;
@@ -179,5 +179,46 @@ $(document).ready(function() {
 			}
 		});
 	});
+
+	$('.searchcontrol').on('keyup', function(){
+		var query = $(this).val();
+		if(query.length > 2 ) {
+			$.ajax({
+				url: baseurl + "search",
+				type: "GET",
+				data: {query:query},
+				success: function(data) {
+					var dropdown = $('.dropdown-content');
+					dropdown.show();
+					dropdown.empty();
+
+					if(data.length > 0) {
+						data.forEach(item => {
+							let datestring = item.created_at;
+							let date = new Date(datestring);
+							let formattedDate = date.toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'short',
+								day: '2-digit'
+							});
+							dropdown.append('<div class="dropdown-item"><a href="'+baseurl+"ticket/"+item.slug+'"><span class="item_name">'+item.subject+'</span><small class="item_date">'+formattedDate+'</a></div>');
+						});
+					} else {
+						dropdown.append('<div class="dropdown-item">No results found</div>');
+					}
+				}
+			});
+		} else {
+			$('.dropdown-content').empty();
+			$('.dropdown-content').hide();
+		}
+	});
+
+	$(document).on('click', function(e){
+		if (!$(e.target).closest('.searchcontrol').length) {
+			$('.dropdown-content').empty();
+			$('.dropdown-content').hide();
+		}
+	})
 	
 });

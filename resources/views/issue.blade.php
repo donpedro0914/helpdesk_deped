@@ -40,11 +40,11 @@
                                                         @if($issue->status == '1')
                                                             <span class="badge badge-success">Active</span>
                                                         @else
-                                                            <span class="badge badge-danger">Suspended</span>
+                                                            <span class="badge badge-danger">Inactive</span>
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <a href="{{ route('admin.issue.edit', ['id'=>$issue->id]) }}" class="btn btn-xs btn-default btn-edit"><i class="mdi mdi-pencil"></i></a>
+                                                        <a href="{{ route('issue.edit', ['id'=>$issue->id]) }}" class="btn btn-xs btn-default btn-edit"><i class="mdi mdi-pencil"></i></a>
                                                         <a data-module="user" id="{{ $issue->id }}" data-name="{{ $issue->type }}" class="btn btn-xs btn-default btn-delete"><i class="text-danger mdi mdi-close-circle"></i></a>
                                                     </td>
                                                 </tr>

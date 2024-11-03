@@ -21,7 +21,7 @@ class UserController extends Controller
         $users = User::where('role', '!=', 'Administrator')->get();
         $usersActiveCount = User::where('role', '!=', 'Administrator')->where('status', 1)->count();
         $usersInactiveCount = User::where('role', '!=', 'Administrator')->where('status', 0)->count();
-        return view('admin.user', compact('users'), ['usersActiveCount' => $usersActiveCount, 'usersInactiveCount' => $usersInactiveCount]);
+        return view('user', compact('users'), ['usersActiveCount' => $usersActiveCount, 'usersInactiveCount' => $usersInactiveCount]);
     }
 
     public function user_store(Request $request)
@@ -51,7 +51,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        return view('admin.edit.user', ['user' => $user]);
+        return view('edit.user', ['user' => $user]);
     }
 
     public function user_update($id, Request $request)
@@ -66,8 +66,8 @@ class UserController extends Controller
         $user->status = $request->status;
         $user->save();
 
-        return ($user) ? redirect('admin/users')->with('success', 'User Updated') :
-                            redirect('admin/users')->with('error', 'Something went wrong');
+        return ($user) ? redirect('users')->with('success', 'User Updated') :
+                            redirect('users')->with('error', 'Something went wrong');
 
     }
 

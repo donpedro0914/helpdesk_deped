@@ -24,13 +24,8 @@
 
         </ul>
         <ul class="list-unstyled menu-left mb-0">
-            @php
-            if(Auth::user()->role == 'Administrator') {
-                $home = '/admin/dashboard';
-            }
-            @endphp
             <li class="float-left">
-                <a href="{{ $home }}" class="logo" style="font-weight: 700;font-size: 20px;">
+                <a href="/dashboard" class="logo" style="font-weight: 700;font-size: 20px;">
                     Helpdesk
                 </a>
             </li>
@@ -42,6 +37,13 @@
                         <span></span>
                     </div>
                 </a>
+            </li>
+            <li class="app-search d-none d-md-block">
+                <form>
+                    <input type="text" placeholder="Search..." class="form-control searchcontrol">
+                    <button type="submit" class="sr-only"></button>
+                </form>
+                <div class="dropdown-content"></div>
             </li>
         </ul>
     </nav>

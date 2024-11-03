@@ -26,7 +26,7 @@ class IssuesController extends Controller
     public function index()
     {
         $issues = Issues::get();
-        return view('admin.issue', compact('issues'));
+        return view('issue', compact('issues'));
     }
 
     public function store(Request $request)
@@ -42,7 +42,7 @@ class IssuesController extends Controller
     public function edit($id, Request $request)
     {
         $issue = Issues::findOrFail($id);
-        return view('admin.edit.issue_type', ['issue' => $issue]);
+        return view('edit.issue_type', ['issue' => $issue]);
     }
 
     public function update($id, Request $request)
@@ -52,8 +52,8 @@ class IssuesController extends Controller
         $issue->status = $request->status;
         $issue->save();
 
-        return ($issue) ? redirect('admin/issue/type')->with('success', 'Issue Type Updated') :
-                            redirect('admin/issue/type')->with('error', 'Something went wrong');
+        return ($issue) ? redirect('issue/type')->with('success', 'Issue Type Updated') :
+                            redirect('issue/type')->with('error', 'Something went wrong');
 
     }
 }

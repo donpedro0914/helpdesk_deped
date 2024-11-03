@@ -254,3 +254,16 @@ button.mediaBtn {
 .media_upload li {
 	list-style: none;
 }
+.dropdown-content {
+	background: #fff;
+	margin-left: 300px;
+	position: absolute;
+	width: 50%;
+	height: auto;
+	border: 1px solid #ccc;
+	display: none;
+}
+.dropdown-item a {
+	display: flex;
+	justify-content: space-between;
+}

@@ -21,7 +21,13 @@ class TicketsController extends Controller
     
     public function index()
     {
+        if(Auth::user()->role == 'Administrator') {
         $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->get();
+        }
+
+        if(Auth::user()->role == 'HelpDesk Agent') {
+            $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->where('tickets.agent', Auth::user()->id)->get();
+        }
         $openTicketCount = Tickets::where('status', 'Open')->count();
         return view('tickets', compact('tickets'), ['openTicketCount' => $openTicketCount]);
     }
@@ -85,7 +91,8 @@ class TicketsController extends Controller
         $issues = Issues::where('status', '1')->pluck('type', 'id');
         $agents = User::where('role', 'HelpDesk Agent')->where('status', '1')->pluck('name', 'id')->prepend('-- Select Agent --', '');
         $uploads = Uploads::select('uploads.*', 'users.name')->leftJoin('users', 'uploads.uploaded_by', '=', 'users.id')->where('uploads.slug', $slug)->get();
-        return view('view-ticket', ['ticket' => $ticket], compact('issues', 'agents', 'uploads'));
+        $assignedAgent = Auth::user()->name;
+        return view('view-ticket', ['ticket' => $ticket, 'assignedAgent' => $assignedAgent], compact('issues', 'agents', 'uploads'));
     }
 
     public function download($filename, $slug)

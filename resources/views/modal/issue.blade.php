@@ -6,7 +6,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 			</div>
 			<div class="modal-body">
-				<form action="{{ route('admin.issue.store') }}" method="post" enctype="multipart/form-data">
+				<form action="{{ route('issue.store') }}" method="post" enctype="multipart/form-data">
 					@csrf
 					<div class="form-row">
 						<div class="col-md-12">

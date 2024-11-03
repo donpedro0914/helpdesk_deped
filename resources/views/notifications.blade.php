@@ -38,12 +38,12 @@
                                                     $dateMatch = Carbon\Carbon::parse($notification->created_at)->locale('uk');
                                                 @endphp
                                                 <tr data-id="{{ $notification->Slug }}">
-                                                    <td data-input="campaign"><a href="{{ URL::to('admin/jobfile/info/'.$notification->Slug) }}">{{ $notification->campaign_name }}</a></td>
-                                                    <td data-input="campaign"><a href="{{ URL::to('admin/jobfile/info/'.$notification->Slug) }}">{{ $notification->type }}</a></td>
-                                                    <td data-input="status"><a href="{{ URL::to('admin/jobfile/info/'.$notification->Slug) }}">{{ $notification->Status }}</a></td>
-                                                    <td data-input="user"><a href="{{ URL::to('admin/jobfile/info/'.$notification->Slug) }}">{{ $notification->User }}</a></td>
-                                                    <td data-input="user"><a href="{{ URL::to('admin/jobfile/info/'.$notification->Slug) }}">{{ $notification->Position }}</a></td>
-                                                    <td data-input="user"><a href="{{ URL::to('admin/jobfile/info/'.$notification->Slug) }}">{{ $dateMatch }}</a></td>
+                                                    <td data-input="campaign"><a href="{{ URL::to('jobfile/info/'.$notification->Slug) }}">{{ $notification->campaign_name }}</a></td>
+                                                    <td data-input="campaign"><a href="{{ URL::to('jobfile/info/'.$notification->Slug) }}">{{ $notification->type }}</a></td>
+                                                    <td data-input="status"><a href="{{ URL::to('jobfile/info/'.$notification->Slug) }}">{{ $notification->Status }}</a></td>
+                                                    <td data-input="user"><a href="{{ URL::to('jobfile/info/'.$notification->Slug) }}">{{ $notification->User }}</a></td>
+                                                    <td data-input="user"><a href="{{ URL::to('jobfile/info/'.$notification->Slug) }}">{{ $notification->Position }}</a></td>
+                                                    <td data-input="user"><a href="{{ URL::to('jobfile/info/'.$notification->Slug) }}">{{ $dateMatch }}</a></td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>

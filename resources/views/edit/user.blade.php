@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="card-box">
-                                <form action="{{ route('admin.user.update', ['id'=>$user->id]) }}" method="post" enctype="multipart/form-data">
+                                <form action="{{ route('user.update', ['id'=>$user->id]) }}" method="post" enctype="multipart/form-data">
                                     @csrf
                                     <div class="form-row">
                                         <div class="form-group col-md-12 col-xs-12">
@@ -47,7 +47,7 @@
                                             <label>Status</label>
                                             @php
                                                 $opt = array(
-                                                    '0' => 'Suspend',
+                                                    '0' => 'Inactive',
                                                     '1' => 'Active'
                                                 );
                                             @endphp

@@ -27,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    // protected $redirectTo = '/home';
+    protected $redirectTo = '/dashboard';
 
     /**
      * Create a new controller instance.
@@ -52,19 +52,13 @@ class LoginController extends Controller
         ];
     }
 
-    public function redirectTo() {
-        $role = Auth::user()->role;
-        $pos = Auth::user()->position;
+    // public function redirectTo() {
+    //     $role = Auth::user()->role;
 
-        if($role == 'Administrator') {
-            switch ($role) {
-                case 'Administrator':
-                    return '/admin/dashboard';
-                break;
-                default:
-                    return '/login';
-                break;
-            }
-        }
-    }
+    //     if ($role) {
+    //         return redirect('/dashboard');
+    //     } else {
+    //         return redirect('/login')->with('error', 'Incorrect username or password');
+    //     }
+    // }
 }

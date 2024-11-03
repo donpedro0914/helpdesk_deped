@@ -75,8 +75,13 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label>HelpDesk Agent</label>
+                                        @if(Auth::user()->role == 'Administrator')
                                         {{ Form::select('agent', $agents, $ticket->agent, ['class' => 'form-control agent_list']) }}
                                         <button class="btn btn-primary float-right update_agent_btn" data-slug="{{ $ticket->slug }}">Update Agent</button>
+                                        @else
+                                        <br />
+                                        {{ $assignedAgent }}
+                                        @endif
                                     </div>
                                     <hr />
                                     <div class="form-group col-md-12">
