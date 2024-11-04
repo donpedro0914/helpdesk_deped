@@ -34,9 +34,11 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="card-box">
+                                @if(Auth::user()->role == 'Administrator' || Auth::user()->role == 'Teacher/Staff')
                                 <div class="button-list mb-3">
                                     <a href="{{ route('create.ticket') }}" class="btn btn-primary text-white">Add Ticket</a>
                                 </div>
+                                @endif
                                 <div class="table-responsive" data-pattern="priority-columns" style="overflow:hidden">
                                     <div class="sticky-table-header">
                                         <table class="table table-bordered dataTable no-footer table-striped">
