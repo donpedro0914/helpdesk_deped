@@ -36,6 +36,7 @@
                                             <label>Role</label>
                                             @php
                                             $role = array(
+                                                'Administrator' => 'Administrator',
                                                 'Teacher/Staff' => 'Teacher/Staff',
                                                 'Supervisor/Manager' => 'Supervisor/Manager',
                                                 'HelpDesk Agent' => 'HelpDesk Agent'

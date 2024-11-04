@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/logout', 'HomeController@logout');
 Route::post('/checkusername', 'UserController@checkusername');
+Route::post('/checkemail', 'UserController@checkemail');
 Route::post('/checkissue', 'IssuesController@checkissue');
 Route::any('sendemail', 'JobFileController@sendemail');
 Route::get('/search', 'HomeController@search')->name('search');

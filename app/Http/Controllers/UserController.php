@@ -18,9 +18,9 @@ class UserController extends Controller
 
     public function user() 
     {
-        $users = User::where('role', '!=', 'Administrator')->get();
-        $usersActiveCount = User::where('role', '!=', 'Administrator')->where('status', 1)->count();
-        $usersInactiveCount = User::where('role', '!=', 'Administrator')->where('status', 0)->count();
+        $users = User::get();
+        $usersActiveCount = User::where('status', 1)->count();
+        $usersInactiveCount = User::where('status', 0)->count();
         return view('user', compact('users'), ['usersActiveCount' => $usersActiveCount, 'usersInactiveCount' => $usersInactiveCount]);
     }
 
@@ -44,6 +44,15 @@ class UserController extends Controller
 
         if($checkuser) {
             return response()->json($checkuser);
+        }
+    }
+
+    public function checkemail(Request $request)
+    {
+        $checkemail = User::where('email', request('email'))->first();
+
+        if($checkemail) {
+            return response()->json($checkemail);
         }
     }
 

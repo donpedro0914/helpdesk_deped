@@ -83,7 +83,10 @@
                                         {{ $assignedAgent }}
                                         @endif
                                     </div>
-                                    <hr />
+                                </div>
+                            </div>
+                            <div class="card-box">
+                                <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label>Attachments</label>
                                         <ul class="media_upload">
@@ -91,6 +94,13 @@
                                             <li class="media_item">{{ $u->filename }} <small>(uploaded by {{ $u->name }})</small><a href="{{ route('download', ['filename' => $u->filename, 'slug' => $u->slug]) }}" target="_blank"><i class="mdi mdi-download"></i></a></li>
                                             @endforeach
                                         </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-box">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label>Ratings</label>
                                     </div>
                                 </div>
                             </div>

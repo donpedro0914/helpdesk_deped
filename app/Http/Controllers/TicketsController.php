@@ -29,7 +29,8 @@ class TicketsController extends Controller
             $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->where('tickets.agent', Auth::user()->id)->get();
         }
         $openTicketCount = Tickets::where('status', 'Open')->count();
-        return view('tickets', compact('tickets'), ['openTicketCount' => $openTicketCount]);
+        $resolvedTicktCount = Tickets::where('status', 'Closed')->count();
+        return view('tickets', compact('tickets'), ['openTicketCount' => $openTicketCount, 'resolvedTicktCount' => $resolvedTicktCount]);
     }
 
     public function create()
@@ -72,14 +73,18 @@ class TicketsController extends Controller
             'slug' => $ticket->slug
         );
 
-        $mail = Mail::send('email.leadnote', $data, function ($message) {
+        $users = User::where('role', 'Administrator')->where('role', 'Supervisor/Manager')->get();
 
-            $subj = 'New Ticket has been generated';
-            $sendto = 'peter.ordonez0914@gmail.com';
-
-            $message->to($sendto, $subj)->subject($subj);
-            $message->from('no-reply@helpdesk.com', 'Admin');
-        });
+        foreach($users as $user) {
+            $mail = Mail::send('email.leadnote', $data, function ($message) {
+    
+                $subj = 'New Ticket has been generated';
+                $sendto = $user->email;
+    
+                $message->to($sendto, $subj)->subject($subj);
+                $message->from('no-reply@helpdesk.com', 'Admin');
+            });
+        }
 
         return ($ticket) ? redirect('tickets')->with('success', 'Ticket Created Successfully') :
                             redirect('tickets')->with('error', 'Something went wrong');

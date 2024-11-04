@@ -41,6 +41,25 @@ $(document).ready(function() {
         })
 	};
 
+	function checkemail(email) {
+        $.ajax({
+            type: 'POST',
+            url: baseurl + '/checkemail',
+            data: {'email':email},
+            success: function(data) {
+                if(data) {
+                    $('.emailcheck').html('<i class="mdi mdi-close-circle text-danger" aria-hidden="true" data-toggle="tooltip" data-placement="right" data-original-title="Email has been taken"> <small>Email has been taken</small></i>');
+                    $('#email').removeClass('validuser');
+                    ifValid(data);
+                } else {
+                    $('.emailcheck').html('<i class="mdi mdi-checkbox-marked-circle text-success" aria-hidden="true" data-toggle="tooltip" data-placement="right" data-original-title="Email is available"> <small>Email is available</small></i>');
+                    $('#email').addClass('validuser');
+                    ifValid();
+                }
+            }
+        })
+	};
+
 	function checkissue(issue) {
         $.ajax({
             type: 'POST',
@@ -63,6 +82,11 @@ $(document).ready(function() {
 	$('#username').on('blur keyup change', function() {
         var username = $(this).val();
         checkusername(username);
+	});
+	
+	$('#email').on('blur keyup change', function() {
+        var email = $(this).val();
+        checkemail(email);
 	});
 	
 	$('#issueType').on('blur keyup change', function() {

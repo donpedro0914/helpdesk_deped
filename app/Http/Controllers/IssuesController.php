@@ -25,7 +25,12 @@ class IssuesController extends Controller
 
     public function index()
     {
-        $issues = Issues::get();
+        // $issues = Issues::get();
+        $issues = DB::table('issues')
+        ->leftJoin('tickets', 'issues.id', '=', 'tickets.issue_type')
+        ->select('issues.type', 'issues.status', 'issues.id', DB::raw('COUNT(tickets.issue_type) as ticket_count'))
+        ->groupBy('issues.id')
+        ->get();
         return view('issue', compact('issues'));
     }
 

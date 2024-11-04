@@ -19,13 +19,14 @@
 								<input type="text" class="form-control" name="name" required />
 							</div>
 							<div class="form-group col-md-12 col-xs-12">
-								<label>E-mail Address</label>
-								<input type="email" class="form-control" name="email" required />
+								<label>E-mail Address</label> <span class="emailcheck"></span>
+								<input type="email" class="form-control" id="email" name="email" required />
 							</div>
 							<div class="form-group col-md-12 col-xs-12">
 								<label>Role</label>
 								<select name="role" class="form-control" id="employeePosition" required>
 									<option value="">-- Select Postion --</option>
+									<option value="Administrator">Administrator</option>
 									<option value="Teacher/Staff">Teacher/Staff</option>
 									<option value="Supervisor/Manager">Supervisor/Manager</option>
 									<option value="HelpDesk Agent">HelpDesk Agent</option>

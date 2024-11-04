@@ -25,8 +25,8 @@
                         <div class="col-xl-3">
                             <div class="card border border-danger">
                                 <div class="card-body text-danger">
-                                    <h4 class="header-title float-left">No. of Resolved Tickets</h4>
-                                    <h1 class="float-right">0</h1>
+                                    <h4 class="header-title float-left">No. of Closed Tickets</h4>
+                                    <h1 class="float-right">{{ $resolvedTicktCount }}</h1>
                                 </div>
                             </div>
                         </div>
@@ -86,8 +86,28 @@
 
     $(document).ready(function() {
 
+        $.fn.dataTable.ext.type.order['custom-priority-order-pre'] = function(d) {
+            switch (d) {
+                case 'High':
+                    return 1;
+                case 'Normal':
+                    return 2;
+                case 'Low':
+                    return 3;
+                default:
+                    return 4; // For any other values that might appear
+            }
+        };
+
         $('.table').DataTable({
-            keys: true
+            keys: true,
+            columnDefs: [
+                { 
+                    targets: 2, // Index of your third column
+                    type: 'custom-priority-order' 
+                }
+            ],
+            order: [[2, 'asc']] // Sort by the third column in ascending order based on custom type
         });
 
         var success = "{!! session('success') !!}";

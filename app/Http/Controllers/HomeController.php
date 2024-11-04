@@ -20,28 +20,35 @@ class HomeController extends Controller
     
     public function dashboard()
     {
-        if(Auth::user()->role == 'Administrator') {
+        $days = [];
+        $allTicketsChart = [];
+        
+        if(Auth::user()->role == 'Administrator' || Auth::user()->role == 'Supervisor/Manager') {
             $allTickets = Tickets::count();
             $openTickets = Tickets::where('status', 'Open')->count();
             $progressTickets = Tickets::where('status', 'In-Progress')->count();
             $closedTickets = Tickets::where('status', 'Closed')->count();
-        }
 
-        if(Auth::user()->role == 'HelpDesk Agent') {
+            $date = date('d');
+            for($i=1; $i<=$date; $i++) {
+                $days[] = $i;
+                $allTicketsChart[] = Tickets::whereDay('created_at', '=', $i)->whereMonth('created_at', date('m'))->count();
+            }
+
+        } else {
             $allTickets = Tickets::where('agent', Auth::user()->id)->count();
             $openTickets = Tickets::where('agent', Auth::user()->id)->where('status', 'Open')->count();
             $progressTickets = Tickets::where('agent', Auth::user()->id)->where('status', 'In-Progress')->count();
             $closedTickets = Tickets::where('agent', Auth::user()->id)->where('status', 'Closed')->count();
+
+            $date = date('d');
+            for($i=1; $i<=$date; $i++) {
+                $days[] = $i;
+                $allTicketsChart[] = Tickets::where('agent', Auth::user()->id)->whereDay('created_at', '=', $i)->whereMonth('created_at', date('m'))->count();
+            }
         }
 
         $month = Carbon::now()->format('F');
-        $days = [];
-        $allTicketsChart = [];
-        $date = date('d');
-        for($i=1; $i<=$date; $i++) {
-            $days[] = $i;
-            $allTicketsChart[] = Tickets::whereDay('created_at', '=', $i)->whereMonth('created_at', date('m'))->count();
-        }
 
         $chartjs = app()->chartjs
         ->name('lineChartTest')

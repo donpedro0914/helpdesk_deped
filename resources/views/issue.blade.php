@@ -35,7 +35,7 @@
                                                 @foreach($issues as $issue)
                                                 <tr class="text-center">
                                                     <td>{{ $issue->type }}</td>
-                                                    <td></td>
+                                                    <td>{{ $issue->ticket_count }}</td>
                                                     <td>
                                                         @if($issue->status == '1')
                                                             <span class="badge badge-success">Active</span>
