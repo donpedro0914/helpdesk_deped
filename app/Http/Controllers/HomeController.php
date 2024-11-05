@@ -105,6 +105,35 @@ class HomeController extends Controller
         ])
         ->options([]);
 
+
+        $averageTime = Tickets::where('status', 'Closed')
+        ->select(DB::raw("AVG(TIMESTAMPDIFF(SECOND, created_at, closed_time)) as average_resolution_time"))
+        ->value('average_resolution_time');
+
+        $overdueTickets = Tickets::whereNull('closed_time')
+        ->whereRaw("TIMESTAMPDIFF(SECOND, created_at, NOW()) > ?", [$averageTime])
+        ->get();
+
+        if ($overdueTickets->isNotEmpty()) {
+            foreach($overdueTickets as $over) {
+                
+                $data = array(
+                    'slug' => $over->slug
+                );
+
+                $user = User::where('id', $over->agent)->first();
+
+                $mail = Mail::send('email.overdue', $data, function ($message) {
+        
+                    $subj = 'Your ticket is overdue';
+                    $sendto = $user->email;
+        
+                    $message->to($sendto, $subj)->subject($subj);
+                    $message->from('no-reply@helpdesk.com', 'Admin');
+                });
+            }
+        }
+
         return view('dashboard', compact('chartjs', 'pie'), ['allTickets' => $allTickets, 'openTickets' => $openTickets, 'progressTickets' => $progressTickets, 'closedTickets' => $closedTickets, 'month' => $month]);
     }
 
