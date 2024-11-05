@@ -124,7 +124,7 @@ class HomeController extends Controller
 
                 $user = User::where('id', $over->agent)->first();
 
-                $mail = Mail::send('email.overdue', $data, function ($message) {
+                $mail = Mail::send('email.overdue', $data, function ($message) use ($user) {
         
                     $subj = 'Your ticket is overdue';
                     $sendto = $user->email;
