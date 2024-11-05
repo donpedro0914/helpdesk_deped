@@ -44,6 +44,7 @@
                                         <table class="table table-bordered dataTable no-footer table-striped">
                                             <thead>
                                                 <tr class="text-center">
+                                                    <th>ID</th>
                                                     <th>Subject</th>
                                                     <th>Issue Type</th>
                                                     <th>Urgency</th>
@@ -57,6 +58,7 @@
                                             <tbody>
                                                 @foreach($tickets as $t)
                                                 <tr class="text-center">
+                                                    <td>{{ str_pad($t->id, 6, '0', STR_PAD_LEFT) }}</td>
                                                     <td>{{ $t->subject }}</td>
                                                     <td>{{ $t->type }}</td>
                                                     <td>{{ $t->urgency }}</td>
