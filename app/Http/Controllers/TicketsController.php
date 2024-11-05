@@ -90,7 +90,7 @@ class TicketsController extends Controller
 
         $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->where('slug', $ticket->slug)->first();
 
-        $id = {{ str_pad($ticket->id, 6, '0', STR_PAD_LEFT) }}
+        $id = str_pad($ticket->id, 6, '0', STR_PAD_LEFT);
 
         $data = array(
             'id' => $id,
