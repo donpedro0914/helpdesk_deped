@@ -98,7 +98,7 @@ class TicketsController extends Controller
         })->get();
 
         foreach($users as $user) {
-            $mail = Mail::send('email.leadnote', $data, function ($message) {
+            $mail = Mail::send('email.leadnote', $data, function ($message) use ($user) {
     
                 $subj = 'New Ticket has been generated';
                 $sendto = $user->email;
