@@ -124,14 +124,18 @@ class HomeController extends Controller
 
                 $user = User::where('id', $over->agent)->first();
 
-                $mail = Mail::send('email.overdue', $data, function ($message) use ($user) {
-        
-                    $subj = 'Your ticket is overdue';
-                    $sendto = $user->email;
-        
-                    $message->to($sendto, $subj)->subject($subj);
-                    $message->from('no-reply@helpdesk.com', 'Admin');
-                });
+                if($user) {
+                    $mail = Mail::send('email.overdue', $data, function ($message) use ($user) {
+            
+                        $subj = 'Your ticket is overdue';
+                        $sendto = $user->email;
+            
+                        $message->to($sendto, $subj)->subject($subj);
+                        $message->from('no-reply@helpdesk.com', 'Admin');
+                    });
+                } else {
+                    Log::warning("User with ID {$over->agent} not found. Email not sent for overdue ticket.");
+                }
             }
         }
 
