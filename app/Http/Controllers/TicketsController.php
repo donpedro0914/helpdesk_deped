@@ -88,8 +88,15 @@ class TicketsController extends Controller
             $uploads->save();
         }
 
+        $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->where('slug', $ticket->slug)->first();
+
+        $id = {{ str_pad($ticket->id, 6, '0', STR_PAD_LEFT) }}
+
         $data = array(
-            'slug' => $ticket->slug
+            'id' => $id,
+            'slug' => $ticket->slug,
+            'subject' => $ticket->subject,
+            'raised_by' => $tickets->raised_by_name
         );
 
         $users = User::where(function($query) {
