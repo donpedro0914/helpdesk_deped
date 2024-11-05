@@ -24,7 +24,15 @@ class TicketsController extends Controller
         if(Auth::user()->role == 'Administrator' || Auth::user()->role == 'Supervisor/Manager') {
         $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->get();
         } else {
-            $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->where('tickets.agent', Auth::user()->id)->get();
+            $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')
+            ->leftJoin('users', 'tickets.raised_by', '=', 'users.id')
+            ->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')
+            ->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')
+            ->where(function($query) {
+                $query->where('tickets.agent', Auth::user()->id)
+                    ->orWhere('tickets.raised_by', Auth::user()->id);
+            })
+            ->get();
         }
         $openTicketCount = Tickets::where('status', 'Open')->count();
         $resolvedTicktCount = Tickets::where('status', 'Closed')->count();
