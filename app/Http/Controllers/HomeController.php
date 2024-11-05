@@ -9,6 +9,7 @@ use App\User;
 use App\Tickets;
 use App\Issues;
 use Carbon\Carbon;
+use Mail;
 
 class HomeController extends Controller
 {
