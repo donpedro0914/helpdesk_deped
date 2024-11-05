@@ -58,7 +58,10 @@ class HomeController extends Controller
             $date = date('d');
             for($i=1; $i<=$date; $i++) {
                 $days[] = $i;
-                $allTicketsChart[] = Tickets::where('agent', Auth::user()->id)->whereDay('created_at', '=', $i)->whereMonth('created_at', date('m'))->count();
+                $allTicketsChart[] = Tickets::where(function($query) {
+                    $query->where('tickets.agent', Auth::user()->id)
+                        ->orWhere('tickets.raised_by', Auth::user()->id);
+                })->whereDay('created_at', '=', $i)->whereMonth('created_at', date('m'))->count();
             }
         }
 
