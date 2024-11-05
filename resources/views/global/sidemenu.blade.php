@@ -23,4 +23,5 @@
         </ul>
     </div>
     <div class="clearfix"></div>
+    {{ HTML::image('img/logo.jpg', 'Logo', array('style' => 'width:100%;display:block;margin:0 auto;')) }}
 </div>
