@@ -22,7 +22,11 @@ class TicketsController extends Controller
     public function index()
     {
         if(Auth::user()->role == 'Administrator' || Auth::user()->role == 'Supervisor/Manager') {
-        $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->get();
+            $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->get();
+            
+            $openTicketCount = Tickets::where('status', 'Open')->count();
+            $resolvedTicktCount = Tickets::where('status', 'Closed')->count();
+
         } else {
             $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')
             ->leftJoin('users', 'tickets.raised_by', '=', 'users.id')
@@ -33,9 +37,18 @@ class TicketsController extends Controller
                     ->orWhere('tickets.raised_by', Auth::user()->id);
             })
             ->get();
+
+            
+            $openTicketCount = Tickets::where('status', 'Open')->where(function($query) {
+                $query->where('tickets.agent', Auth::user()->id)
+                    ->orWhere('tickets.raised_by', Auth::user()->id);
+            })->count();
+            $resolvedTicktCount = Tickets::where('status', 'Closed')->where(function($query) {
+                $query->where('tickets.agent', Auth::user()->id)
+                    ->orWhere('tickets.raised_by', Auth::user()->id);
+            })->count();
+            
         }
-        $openTicketCount = Tickets::where('status', 'Open')->count();
-        $resolvedTicktCount = Tickets::where('status', 'Closed')->count();
         return view('tickets', compact('tickets'), ['openTicketCount' => $openTicketCount, 'resolvedTicktCount' => $resolvedTicktCount]);
     }
 
