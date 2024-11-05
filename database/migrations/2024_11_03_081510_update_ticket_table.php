@@ -14,7 +14,8 @@ class UpdateTicketTable extends Migration
     public function up()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->string('ticket_no')->nullable()->after('slug');
+            $table->string('in_progress_time')->nullable()->after('created_at');
+            $table->string('closed_time')->nullable()->after('in_progress_time');
         });
     }
 

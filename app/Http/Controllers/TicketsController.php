@@ -131,6 +131,12 @@ class TicketsController extends Controller
 
         $ticket->notes = $note;
         $ticket->status = $request->status;
+        if($request->status == 'In-Progress') {
+            $ticket->in_progress_time = now();
+        }
+        if($request->status == 'Closed') {
+            $ticket->closed_time = now();
+        }
         $ticket->issue_type = $request->issue_type;
         $ticket->urgency = $request->urgency;
         $ticket->save();
