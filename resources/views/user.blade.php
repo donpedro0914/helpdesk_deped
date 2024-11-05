@@ -17,7 +17,7 @@
                         <div class="col-xl-3">
                             <div class="card border border-primary">
                                 <div class="card-body text-primary">
-                                    <h4 class="header-title float-left">No. of Users Online</h4>
+                                    <h4 class="header-title float-left">No. of Active Users</h4>
                                     <h1 class="float-right">{{ $usersActiveCount }}</h1>
                                 </div>
                             </div>
