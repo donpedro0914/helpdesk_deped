@@ -10,6 +10,7 @@ use App\Tickets;
 use App\Issues;
 use Carbon\Carbon;
 use Mail;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
