@@ -38,10 +38,22 @@ class HomeController extends Controller
             }
 
         } else {
-            $allTickets = Tickets::where('agent', Auth::user()->id)->count();
-            $openTickets = Tickets::where('agent', Auth::user()->id)->where('status', 'Open')->count();
-            $progressTickets = Tickets::where('agent', Auth::user()->id)->where('status', 'In-Progress')->count();
-            $closedTickets = Tickets::where('agent', Auth::user()->id)->where('status', 'Closed')->count();
+            $allTickets = Tickets::where(function($query) {
+                $query->where('tickets.agent', Auth::user()->id)
+                    ->orWhere('tickets.raised_by', Auth::user()->id);
+            })->count();
+            $openTickets = Tickets::where(function($query) {
+                $query->where('tickets.agent', Auth::user()->id)
+                    ->orWhere('tickets.raised_by', Auth::user()->id);
+            })->where('status', 'Open')->count();
+            $progressTickets = Tickets::where(function($query) {
+                $query->where('tickets.agent', Auth::user()->id)
+                    ->orWhere('tickets.raised_by', Auth::user()->id);
+            })->where('status', 'In-Progress')->count();
+            $closedTickets = Tickets::where(function($query) {
+                $query->where('tickets.agent', Auth::user()->id)
+                    ->orWhere('tickets.raised_by', Auth::user()->id);
+            })->where('status', 'Closed')->count();
 
             $date = date('d');
             for($i=1; $i<=$date; $i++) {
