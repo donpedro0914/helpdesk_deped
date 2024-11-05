@@ -11,7 +11,7 @@
                             <div class="account-logo-box">
                                 <h2 class="text-center">
                                     <div class="h2 font-w600 push-30-t push-5 center">
-                                        DepEd Helpdesk
+                                    {{ HTML::image('img/logo.jpg', 'Logo', array('style' => 'width:50%;display:block;margin:0 auto;')) }}
                                     </div>
                                 </h2>
                             </div>
