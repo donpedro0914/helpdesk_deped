@@ -34,14 +34,14 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="card-box">
-                                @if(Auth::user()->role == 'Administrator' || Auth::user()->role == 'Supervisor/Manager')                                
+                                <!-- @if(Auth::user()->role == 'Administrator' || Auth::user()->role == 'Supervisor/Manager')                                 -->
                                 <div class="button-list mb-3">
                                     <span>Priority:</span>
                                     <a href="{{ route('tickets', ['urgency' => 'High']) }}" class="btn btn-success text-white">High</a>
                                     <a href="{{ route('tickets', ['urgency' => 'Normal']) }}" class="btn btn-secondary text-white">Nomal</a>
                                     <a href="{{ route('tickets', ['urgency' => 'Low']) }}" class="btn btn-danger text-white">Low</a>
                                 </div>
-                                @endif
+                                <!-- @endif -->
                                 @if(Auth::user()->role == 'Administrator' || Auth::user()->role == 'Teacher/Staff')
                                 <div class="button-list mb-3 d-flex">
                                     <a href="{{ route('create.ticket') }}" class="btn btn-primary text-white">Add Ticket</a>
