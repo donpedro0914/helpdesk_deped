@@ -123,37 +123,37 @@ class HomeController extends Controller
         ->options([]);
 
 
-        $averageTime = Tickets::where('status', 'Closed')
-        ->select(DB::raw("AVG(TIMESTAMPDIFF(SECOND, created_at, closed_time)) as average_resolution_time"))
-        ->value('average_resolution_time');
+        // $averageTime = Tickets::where('status', 'Closed')
+        // ->select(DB::raw("AVG(TIMESTAMPDIFF(SECOND, created_at, closed_time)) as average_resolution_time"))
+        // ->value('average_resolution_time');
 
-        $overdueTickets = Tickets::whereNull('closed_time')
-        ->whereRaw("TIMESTAMPDIFF(SECOND, created_at, NOW()) > ?", [$averageTime])
-        ->get();
+        // $overdueTickets = Tickets::whereNull('closed_time')
+        // ->whereRaw("TIMESTAMPDIFF(SECOND, created_at, NOW()) > ?", [$averageTime])
+        // ->get();
 
-        if ($overdueTickets->isNotEmpty()) {
-            foreach($overdueTickets as $over) {
+        // if ($overdueTickets->isNotEmpty()) {
+        //     foreach($overdueTickets as $over) {
                 
-                $data = array(
-                    'slug' => $over->slug
-                );
+        //         $data = array(
+        //             'slug' => $over->slug
+        //         );
 
-                $user = User::where('id', $over->agent)->first();
+        //         $user = User::where('id', $over->agent)->first();
 
-                if($user) {
-                    $mail = Mail::send('email.overdue', $data, function ($message) use ($user) {
+        //         if($user) {
+        //             $mail = Mail::send('email.overdue', $data, function ($message) use ($user) {
             
-                        $subj = 'Your ticket is overdue';
-                        $sendto = $user->email;
+        //                 $subj = 'Your ticket is overdue';
+        //                 $sendto = $user->email;
             
-                        $message->to($sendto, $subj)->subject($subj);
-                        $message->from('no-reply@helpdesk.com', 'Admin');
-                    });
-                } else {
-                    Log::warning("User with ID {$over->agent} not found. Email not sent for overdue ticket.");
-                }
-            }
-        }
+        //                 $message->to($sendto, $subj)->subject($subj);
+        //                 $message->from('no-reply@helpdesk.com', 'Admin');
+        //             });
+        //         } else {
+        //             Log::warning("User with ID {$over->agent} not found. Email not sent for overdue ticket.");
+        //         }
+        //     }
+        // }
 
         return view('dashboard', compact('chartjs', 'pie'), ['allTickets' => $allTickets, 'openTickets' => $openTickets, 'progressTickets' => $progressTickets, 'closedTickets' => $closedTickets, 'month' => $month]);
     }

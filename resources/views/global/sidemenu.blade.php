@@ -11,7 +11,7 @@
                     <span class="menu-arrow"></span>
                 </a>
                 <ul class="nav-second-level collapse" aria-expanded="false">
-                    <li><a href="{{ route('tickets') }}">Ticket List</a></li>
+                    <li class="has-submenu"><a href="{{ route('tickets') }}">Ticket List</a></li>
                     @if(Auth::user()->role == 'Administrator')
                     <li><a href="{{ route('issue') }}">Issue Types</a></li>
                     @endif

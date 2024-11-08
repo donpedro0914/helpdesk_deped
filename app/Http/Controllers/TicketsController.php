@@ -22,8 +22,13 @@ class TicketsController extends Controller
     public function index()
     {
         if(Auth::user()->role == 'Administrator' || Auth::user()->role == 'Supervisor/Manager') {
-            $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->get();
             
+            $urgency = request()->query('urgency');
+            if($urgency != null) {
+                $tickets = Tickets::select('tickets.*', 'users.name as raised_by_name', 'agent_users.name as agent_name', 'issues.type')->leftJoin('users', 'tickets.raised_by', '=', 'users.id')->leftJoin('issues', 'tickets.issue_type', '=', 'issues.id')->leftJoin('users as agent_users', 'tickets.agent', '=', 'agent_users.id')->where('tickets.urgency', $urgency)->get();
+                } else {
+                    $tickets = '';
+                }
             $openTicketCount = Tickets::where('status', '!=', 'Closed')->count();
             $resolvedTicktCount = Tickets::where('status', 'Closed')->count();
 
@@ -49,7 +54,8 @@ class TicketsController extends Controller
             })->count();
             
         }
-        return view('tickets', compact('tickets'), ['openTicketCount' => $openTicketCount, 'resolvedTicktCount' => $resolvedTicktCount]);
+        $issue_type = Issues::where('status', '1')->get();
+        return view('tickets', compact('tickets', 'issue_type'), ['openTicketCount' => $openTicketCount, 'resolvedTicktCount' => $resolvedTicktCount]);
     }
 
     public function create()
